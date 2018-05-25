@@ -1,4 +1,4 @@
-# MD5 Compare Directories
+# Compare Two Directories with MD5sum
 -----------------------------------------------------------------------------
 Generate and check MD5 hashs recursively between two directories
 
