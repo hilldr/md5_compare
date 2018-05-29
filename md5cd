@@ -8,9 +8,7 @@
 ##     directories (results in 'md5sum_check_DIR#.txt')
 ## 2 - Compare list of MD5 hashes in DIR1 to list of MD5 hashes in DIR2
 ## 3 - Output lists of files that are present in DIR1 but not present in DIR2
-##     called 'different_files.log'
-## 4 - Output list of files in DIR1 that are identical in DIR2 called
-##     'identical_files.log'
+## 4 - Output list of files in DIR1 that are identical in DIR2 
 
 ## Setup variables
 ## set number of cores for multicore MD5 generation
@@ -53,6 +51,7 @@ while true; do
 	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -f list2.log {} >> md5_compdir.log
 	    echo '--------------------------------------------------------------------------------' >> md5_compdir.log
 	    echo "md5_compdir initiated at "$DT1" and completed at "$(date '+%d/%m/%Y %H:%M:%S') >> md5_compdir.log
+
 	    ## remove extraneous log files
 	    rm list1.log list2.log
 	    
