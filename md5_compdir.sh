@@ -42,13 +42,12 @@ while true; do
 	    ## create data file and add header line
 	    echo '## These files are NOT present in '$DIR2 > different_files.log 
 	    echo 'Checksum path' >> different_files.log 
-	    grep -v -f list2.log md5sum_DIR1.txt >> different_files.log
+	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -v -f list2.log {} >> different_files.log 
 
 	    ## this is a list of files that are the same in both directories
 	    echo '## These files are identical in both '$DIR1' and '$DIR2 > identical_files.log
 	    echo 'Checksum path' >> identical_files.log 
-	    grep -f list2.log md5sum_DIR1.txt >> identical_files.log
-
+	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -f list2.log {} >> identical_files.log 
 	    ## remove extraneous log files
 	    rm list1.log list2.log
 	    

@@ -1,6 +1,6 @@
 # Compare Two Directories with MD5sum
 -----------------------------------------------------------------------------
-Generate and check MD5 hashs recursively between two directories
+Generate and check MD5 hashes recursively between two directories
 
 David R. Hill
 
