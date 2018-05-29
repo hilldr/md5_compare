@@ -40,17 +40,17 @@ while true; do
 	    ## and list of similarities
 	    ## this is a list of files that are different between the two directories
 	    ## create data file and add header line
-	    echo '## These files from '$DIR1' are NOT present in '$DIR2 > md5_compdir.log 
-	    echo 'Checksum path' >> md5_compdir.log
-	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -v -f list2.log {} >> md5_compdir.log 
-	    echo '--------------------------------------------------------------------------------' >> md5_compdir.log
+	    echo '## These files from '$DIR1' are NOT present in '$DIR2 > md5cd_results.log
+	    echo 'Checksum path' >> md5cd_results.log
+	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -v -f list2.log {} >> md5cd_results.log
+	    echo '--------------------------------------------------------------------------------' >> md5cd_results.log
 	    
 	    ## this is a list of files that are the same in both directories
-	    echo '## These files are IDENTICAL in both '$DIR1' and '$DIR2 >> md5_compdir.log
-	    echo 'Checksum path' >> md5_compdir.log
-	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -f list2.log {} >> md5_compdir.log
-	    echo '--------------------------------------------------------------------------------' >> md5_compdir.log
-	    echo "md5_compdir initiated at "$DT1" and completed at "$(date '+%d/%m/%Y %H:%M:%S') >> md5_compdir.log
+	    echo '## These files are IDENTICAL in both '$DIR1' and '$DIR2 >> md5cd_results.log
+	    echo 'Checksum path' >> md5cd_results.log
+	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -f list2.log {} >> md5cd_results.log
+	    echo '--------------------------------------------------------------------------------' >> md5cd_results.log
+	    echo "md5_compdir initiated at "$DT1" and completed at "$(date '+%d/%m/%Y %H:%M:%S') >> md5cd_results.log
 
 	    ## remove extraneous log files
 	    rm list1.log list2.log
