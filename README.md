@@ -14,5 +14,7 @@ This script performs a series of actions:
 
 ## HOW TO INSTALL THIS SCRIPT 
 ``` sh
-sudo cp md5cp /usr/local/bin
+git clone https://github.com/hilldr/md5_compare.git
+cd md5_compare
+sudo cp md5cd /usr/local/bin
 ```
