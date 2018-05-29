@@ -16,10 +16,28 @@ MAXCORES=$(grep -c ^processor /proc/cpuinfo)
 ## start time
 DT1=$(date '+%d/%m/%Y %H:%M:%S')
 
-read -e -p "Source directory (where are you copying from?):" DIR1
-read -e -p "Target directory (where are you copying to?):" DIR2
-read -p "How many cores (max is "$MAXCORES")?:" CORES
+## set equivalent variables for arguments passed from command line
+DIR1=$1
+DIR2=$2
+CORES=$3
 
+## if arguments are not supplied, prompt user for directories and cores
+if [ -z "$1" ]
+then
+    read -e -p "Source directory (where are you copying from?):" DIR1
+fi
+
+if [ -z "$2" ]
+then
+read -e -p "Target directory (where are you copying to?):" DIR2
+fi
+
+if [ -z "$3" ]
+then
+read -p "How many cores (max is "$MAXCORES")?:" CORES
+fi
+
+## confirm setup interactively prior to running md5sum
 while true; do
     read -p "Compare MD5 checksums in "$DIR1" to "$DIR2" using "$CORES" core(s) [y/n]?" yn
     case $yn in
