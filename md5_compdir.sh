@@ -15,6 +15,8 @@
 ## Setup variables
 ## set number of cores for multicore MD5 generation
 MAXCORES=$(grep -c ^processor /proc/cpuinfo)
+## start time
+DT1=$(date '+%d/%m/%Y %H:%M:%S')
 
 read -e -p "Source directory (where are you copying from?):" DIR1
 read -e -p "Target directory (where are you copying to?):" DIR2
@@ -50,7 +52,7 @@ while true; do
 	    echo 'Checksum path' >> md5_compdir.log
 	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -f list2.log {} >> md5_compdir.log
 	    echo '--------------------------------------------------------------------------------' >> md5_compdir.log
-
+	    echo "md5_compdir initiated at "$DT1" and completed at "$(date '+%d/%m/%Y %H:%M:%S') >> md5_compdir.log
 	    ## remove extraneous log files
 	    rm list1.log list2.log
 	    
