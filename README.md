@@ -1,4 +1,4 @@
-# Compare Two Directories with MD5sum
+# Compare two Directories with MD5sum
 -----------------------------------------------------------------------------
 Generate and check MD5 hashes recursively between two directories
 
@@ -21,7 +21,7 @@ md5cd
 
 ### Advanced usage
 ```sh
-# supply arguments to script (will prompt to confirm setup before runninf md5cd)
+# supply arguments to script (will prompt to confirm setup before running md5cd)
 # directories are path strings (no quotations) and cores is an integer
 md5cd source_directory target_directory cores 
 # pass "yes" answer to skip confirmation step
