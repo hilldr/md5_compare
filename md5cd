@@ -1,4 +1,7 @@
 #! /bin/bash
+
+##                                 md5cd
+## -----------------------------------------------------------------------------
 ## generate and check MD5 hash recursively between two directories
 ## David R. Hill
 ## -----------------------------------------------------------------------------
@@ -21,6 +24,7 @@ DIR1=$1
 DIR2=$2
 CORES=$3
 
+
 ## if arguments are not supplied, prompt user for directories and cores
 if [ -z "$1" ]
 then
@@ -41,18 +45,25 @@ fi
 while true; do
     read -p "Compare MD5 checksums in "$DIR1" to "$DIR2" using "$CORES" core(s) [y/n]?" yn
     case $yn in
-        [Yy]* ) 
+        [Yy]* )
+	    ## find largest file to compute block size
+	    BSIZE=$(find $DIR1 -type f -printf "%s\t%p\n" | sort -n | tail -1 | awk '{print $1}')
 	    ## generate md5sum recursively
-	    find $DIR1 -type f | parallel -j $CORES md5sum > md5sum_DIR1.txt 
+	    find $DIR1 -type f | parallel -j $CORES --block $BSIZE md5sum > md5sum_DIR1.txt 
 	    ## verify md5sums against files
-	    md5sum -c md5sum_DIR1.txt > md5sum_check_DIR1.txt
+	    cat md5sum_DIR2.txt | parallel --pipe -j $CORES md5sum -c > md5sum_check_DIR1_.txt 
 	    cut -f 1 -d\  md5sum_DIR1.txt > list1.log
 
+	    ## find largest file to compute block size
+	    BSIZE=$(find $DIR2 -type f -printf "%s\t%p\n" | sort -n | tail -1 | awk '{print $1}')
 	    ## generate md5sum recursively
-	    find $DIR2 -type f | parallel -j $CORES md5sum > md5sum_DIR2.txt 
+	    find $DIR2 -type f | parallel -j $CORES --block $BSIZE md5sum > md5sum_DIR2.txt 
 	    ## verify md5sums against files
-	    md5sum -c md5sum_DIR2.txt > md5sum_check_DIR2.txt
+	    cat md5sum_DIR2.txt | parallel --pipe -j $CORES md5sum -c > md5sum_check_DIR2_.txt 
 	    cut -f 1 -d\  md5sum_DIR2.txt > list2.log
+
+	    ## set locale to C for faster string matching in grep
+	    export LC_ALL=C
 
 	    ## compare two md5sum reports and output list of differences
 	    ## and list of similarities
@@ -60,16 +71,16 @@ while true; do
 	    ## create data file and add header line
 	    echo '## These files from '$DIR1' are NOT present in '$DIR2 > md5cd_results.log
 	    echo 'Checksum path' >> md5cd_results.log
-	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -v -f list2.log {} >> md5cd_results.log
+	    cat md5sum_DIR1.txt | parallel --pipe -j $CORES grep -v -f list2.log {} >> md5cd_results.log
 	    echo '--------------------------------------------------------------------------------' >> md5cd_results.log
 	    
 	    ## this is a list of files that are the same in both directories
 	    echo '## These files are IDENTICAL in both '$DIR1' and '$DIR2 >> md5cd_results.log
 	    echo 'Checksum path' >> md5cd_results.log
-	    cat md5sum_DIR1.txt | parallel -j $CORES --pipe --block 2000M grep -f list2.log {} >> md5cd_results.log
+	    cat md5sum_DIR1.txt | parallel --pipe -j $CORES grep -f list2.log {} >> md5cd_results.log
 	    echo '--------------------------------------------------------------------------------' >> md5cd_results.log
 	    echo "md5cd initiated at "$DT1" and completed at "$(date '+%d/%m/%Y %H:%M:%S') >> md5cd_results.log
-
+		    
 	    ## remove extraneous log files
 	    rm list1.log list2.log
 	    
